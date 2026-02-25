@@ -55,11 +55,14 @@ export async function POST(request: NextRequest) {
       })
       .select().single();
 
-    if (error) return NextResponse.json({ error: "Erro ao salvar cadastro" }, { status: 500 });
+    if (error) {
+      console.error("Supabase INSERT error:", error);
+      return NextResponse.json({ error: error.message || "Erro ao salvar cadastro" }, { status: 500 });
+    }
     return NextResponse.json(data, { status: 201 });
   } catch (err) {
     console.error("POST /api/prestadores error:", err);
-    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
+    return NextResponse.json({ error: err instanceof Error ? err.message : "Erro interno do servidor" }, { status: 500 });
   }
 }
 
