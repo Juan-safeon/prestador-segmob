@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
     }
 
     const supabase = await getSupabaseServer();
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from("prestadores")
       .insert({
         nome: nome.trim(), cidade: cidade.trim(), uf: uf.toUpperCase(),
@@ -52,14 +52,13 @@ export async function POST(request: NextRequest) {
         endereco: ponto_fixo ? (endereco?.trim() || null) : null,
         regioes: regioes || [], dias: dias || [], horario,
         whatsapp: cleanPhone, email: email.trim().toLowerCase(), status: "em_analise",
-      })
-      .select().single();
+      });
 
     if (error) {
       console.error("Supabase INSERT error:", error);
       return NextResponse.json({ error: error.message || "Erro ao salvar cadastro" }, { status: 500 });
     }
-    return NextResponse.json(data, { status: 201 });
+    return NextResponse.json({ success: true }, { status: 201 });
   } catch (err) {
     console.error("POST /api/prestadores error:", err);
     return NextResponse.json({ error: err instanceof Error ? err.message : "Erro interno do servidor" }, { status: 500 });
