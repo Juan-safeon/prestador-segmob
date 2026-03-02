@@ -11,9 +11,9 @@ const isDevMode = () => {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { nome, cidade, uf, ponto_fixo, endereco, regioes, dias, horario, whatsapp, email } = body;
+    const { empresa, nome, whatsapp, email, cidade, uf, especializacao, segmentos } = body;
 
-    if (!nome || !cidade || !uf || !horario || !whatsapp || !email) {
+    if (!empresa || !nome || !whatsapp || !email || !cidade || !uf) {
       return NextResponse.json({ error: "Campos obrigatórios faltando" }, { status: 400 });
     }
     if (typeof nome !== "string" || nome.trim().length < 3) {
@@ -29,16 +29,14 @@ export async function POST(request: NextRequest) {
 
     if (isDevMode()) {
       const created = addMockPrestador({
+        empresa: empresa.trim(),
         nome: nome.trim(),
-        cidade: cidade.trim(),
-        uf: uf.toUpperCase(),
-        ponto_fixo: ponto_fixo ?? false,
-        endereco: ponto_fixo ? (endereco?.trim() || null) : null,
-        regioes: regioes || [],
-        dias: dias || [],
-        horario,
         whatsapp: cleanPhone,
         email: email.trim().toLowerCase(),
+        cidade: cidade.trim(),
+        uf: uf.toUpperCase(),
+        especializacao: especializacao || "",
+        segmentos: segmentos || [],
       });
       return NextResponse.json(created, { status: 201 });
     }
@@ -47,11 +45,15 @@ export async function POST(request: NextRequest) {
     const { error } = await supabase
       .from("prestadores")
       .insert({
-        nome: nome.trim(), cidade: cidade.trim(), uf: uf.toUpperCase(),
-        ponto_fixo: ponto_fixo ?? false,
-        endereco: ponto_fixo ? (endereco?.trim() || null) : null,
-        regioes: regioes || [], dias: dias || [], horario,
-        whatsapp: cleanPhone, email: email.trim().toLowerCase(), status: "em_analise",
+        empresa: empresa.trim(),
+        nome: nome.trim(),
+        whatsapp: cleanPhone,
+        email: email.trim().toLowerCase(),
+        cidade: cidade.trim(),
+        uf: uf.toUpperCase(),
+        especializacao: especializacao || "",
+        segmentos: segmentos || [],
+        status: "em_analise",
       });
 
     if (error) {

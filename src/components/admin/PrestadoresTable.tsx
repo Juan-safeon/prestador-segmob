@@ -53,16 +53,16 @@ export default function PrestadoresTable({
           <thead>
             <tr className="border-b border-[#2D1660]">
               <th className="text-left text-xs text-white/40 font-medium uppercase tracking-wider px-5 py-3">
-                Nome
+                Nome / Empresa
               </th>
               <th className="text-left text-xs text-white/40 font-medium uppercase tracking-wider px-5 py-3">
                 Cidade / UF
               </th>
               <th className="text-left text-xs text-white/40 font-medium uppercase tracking-wider px-5 py-3">
-                Tipo
+                Especialização
               </th>
               <th className="text-left text-xs text-white/40 font-medium uppercase tracking-wider px-5 py-3">
-                Disponibilidade
+                Tipo
               </th>
               <th className="text-left text-xs text-white/40 font-medium uppercase tracking-wider px-5 py-3">
                 Status
@@ -81,20 +81,22 @@ export default function PrestadoresTable({
               >
                 <td className="px-5 py-4">
                   <div className="text-sm font-medium text-white">{p.nome}</div>
+                  <div className="text-xs text-[#8E8EDC] font-medium">{p.empresa}</div>
                   <div className="text-xs text-white/30">{p.email}</div>
                 </td>
                 <td className="px-5 py-4 text-sm text-white/60">
                   {p.cidade} / {p.uf}
                 </td>
                 <td className="px-5 py-4">
-                  <span className={`text-xs px-2 py-1 rounded-md ${
-                    p.ponto_fixo ? "bg-[#3B82F6]/10 text-[#3B82F6]" : "bg-[#F59E0B]/10 text-[#F59E0B]"
-                  }`}>
+                  <div className="text-xs text-white/70 max-w-[150px] truncate" title={p.especializacao}>
+                    {p.especializacao || "Não informada"}
+                  </div>
+                </td>
+                <td className="px-5 py-4">
+                  <span className={`text-xs px-2 py-1 rounded-md ${p.ponto_fixo ? "bg-[#3B82F6]/10 text-[#3B82F6]" : "bg-[#F59E0B]/10 text-[#F59E0B]"
+                    }`}>
                     {p.ponto_fixo ? "Fixo" : "Móvel"}
                   </span>
-                </td>
-                <td className="px-5 py-4 text-xs text-white/40">
-                  {p.dias.join(", ")} &middot; {p.horario}
                 </td>
                 <td className="px-5 py-4">
                   <StatusBadge status={p.status} size="sm" />
@@ -135,6 +137,7 @@ export default function PrestadoresTable({
               <div className="flex items-start justify-between mb-2">
                 <div>
                   <div className="text-sm font-medium text-white">{p.nome}</div>
+                  <div className="text-xs text-[#8E8EDC] mb-1">{p.empresa}</div>
                   <div className="text-xs text-white/40">{p.cidade} / {p.uf}</div>
                 </div>
                 <StatusBadge status={p.status} size="sm" />

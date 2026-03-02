@@ -43,6 +43,7 @@ export default function ProviderSidePanel({ provider, onClose, onStatusChange }:
             <div className="sticky top-0 bg-[#0F0024]/95 backdrop-blur-lg border-b border-[#2D1660] p-5 flex items-center justify-between z-10">
               <div>
                 <h3 className="text-lg font-semibold text-white">{provider.nome}</h3>
+                <div className="text-sm text-[#8E8EDC] font-medium mb-1">{provider.empresa}</div>
                 <StatusBadge status={provider.status} size="sm" />
               </div>
               <button
@@ -54,6 +55,35 @@ export default function ProviderSidePanel({ provider, onClose, onStatusChange }:
             </div>
 
             <div className="p-5 space-y-6">
+              {/* Specialization & Segments */}
+              <div className="p-4 rounded-2xl bg-[#6E3DF7]/5 border border-[#6E3DF7]/15 space-y-3">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-[#6E3DF7]/10 flex items-center justify-center flex-shrink-0">
+                    <Globe className="w-4 h-4 text-[#8E8EDC]" />
+                  </div>
+                  <div>
+                    <div className="text-[10px] uppercase tracking-wider text-white/30 font-medium">Especialização</div>
+                    <div className="text-sm text-white/80">{provider.especializacao || "Não informada"}</div>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-[#6E3DF7]/10 flex items-center justify-center flex-shrink-0">
+                    <Car className="w-4 h-4 text-[#8E8EDC]" />
+                  </div>
+                  <div>
+                    <div className="text-[10px] uppercase tracking-wider text-white/30 font-medium">Segmentos</div>
+                    <div className="flex flex-wrap gap-1.5 mt-1">
+                      {provider.segmentos.map((s) => (
+                        <span key={s} className="px-2 py-0.5 rounded-md bg-[#6E3DF7]/20 text-[#8E8EDC] text-[10px] font-medium">
+                          {s === "leves" ? "Veículos Leves" : s === "pesados" ? "Veículos Pesados" : s}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {/* Info */}
               <div className="space-y-4">
                 <div className="flex items-center gap-3 text-white/60">
@@ -84,20 +114,10 @@ export default function ProviderSidePanel({ provider, onClose, onStatusChange }:
                   <span>{provider.email}</span>
                 </div>
 
-                <div className="flex items-start gap-3 text-white/60">
-                  <Globe className="w-4 h-4 text-[#8E8EDC] mt-0.5" />
-                  <div className="flex flex-wrap gap-1.5">
-                    {provider.regioes.map((r) => (
-                      <span key={r} className="px-2 py-0.5 rounded-md bg-white/5 text-xs">
-                        {r}
-                      </span>
-                    ))}
-                  </div>
-                </div>
 
                 <div className="flex items-center gap-3 text-white/60">
                   <Calendar className="w-4 h-4 text-[#8E8EDC]" />
-                  <span className="text-sm">{provider.dias.join(", ")}</span>
+                  <span className="text-sm">{(provider.dias || []).join(", ")}</span>
                 </div>
 
                 <div className="flex items-center gap-3 text-white/60">

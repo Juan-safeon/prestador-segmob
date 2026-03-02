@@ -73,10 +73,10 @@ export default function HeroSection() {
               className="flex flex-col min-[420px]:flex-row items-stretch min-[420px]:items-start gap-3 sm:gap-4"
             >
               <GradientButton size="lg" onClick={() => scrollTo("cadastro")}>
-                <span className="whitespace-nowrap text-sm sm:text-base">Quero me cadastrar</span>
+                <span className="whitespace-nowrap text-sm sm:text-base">Quero ser um Prestador</span>
               </GradientButton>
-              <GradientButton variant="outline" size="lg" onClick={() => scrollTo("sobre")}>
-                <span className="whitespace-nowrap text-sm sm:text-base">Entender como funciona</span>
+              <GradientButton variant="white" size="lg" onClick={() => scrollTo("cadastro")}>
+                <span className="whitespace-nowrap text-sm sm:text-base">Quero me Cadastrar</span>
               </GradientButton>
             </motion.div>
 

@@ -168,11 +168,10 @@ export default function EditPrestador({ params }: { params: Promise<{ id: string
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${
-                activeTab === tab.key
+              className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${activeTab === tab.key
                   ? "bg-[#6E3DF7]/20 text-white"
                   : "text-white/40 hover:text-white/70"
-              }`}
+                }`}
             >
               <tab.icon className="w-4 h-4 flex-shrink-0" />
               {tab.label}
@@ -193,7 +192,8 @@ export default function EditPrestador({ params }: { params: Promise<{ id: string
           <div className="space-y-6">
             <SectionTitle icon={User} title="Informações Pessoais" />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <InputField label="Nome completo" value={form.nome || ""} onChange={(v) => updateField("nome", v)} icon={User} />
+              <InputField label="Nome do Responsável" value={form.nome || ""} onChange={(v) => updateField("nome", v)} icon={User} />
+              <InputField label="Nome da Empresa" value={form.empresa || ""} onChange={(v) => updateField("empresa", v)} icon={Building2} />
               <InputField label="E-mail" value={form.email || ""} onChange={(v) => updateField("email", v)} icon={Mail} type="email" />
               <InputField label="WhatsApp" value={form.whatsapp || ""} onChange={(v) => updateField("whatsapp", v)} icon={Phone} />
               <SelectField
@@ -204,6 +204,7 @@ export default function EditPrestador({ params }: { params: Promise<{ id: string
                 icon={MapPin}
               />
               <InputField label="Cidade" value={form.cidade || ""} onChange={(v) => updateField("cidade", v)} icon={MapPin} />
+              <InputField label="Ramo / Especialização" value={form.especializacao || ""} onChange={(v) => updateField("especializacao", v)} icon={Globe} />
               <SelectField
                 label="Tipo de atendimento"
                 value={form.ponto_fixo ? "fixo" : "movel"}
@@ -214,6 +215,30 @@ export default function EditPrestador({ params }: { params: Promise<{ id: string
                 ]}
                 icon={form.ponto_fixo ? Building2 : Car}
               />
+            </div>
+
+            <div>
+              <label className="block text-sm text-white/50 mb-2 font-medium">Segmentos atendidos</label>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { value: "leves", label: "Veículos Leves" },
+                  { value: "pesados", label: "Veículos Pesados" },
+                ].map((s) => (
+                  <button
+                    key={s.value}
+                    onClick={() => {
+                      const current = form.segmentos || [];
+                      updateField("segmentos", current.includes(s.value) ? current.filter((x) => x !== s.value) : [...current, s.value]);
+                    }}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${(form.segmentos || []).includes(s.value)
+                        ? "bg-[#6E3DF7]/15 text-[#8E8EDC] border-[#6E3DF7]/30"
+                        : "text-white/30 border-white/10 hover:border-white/20"
+                      }`}
+                  >
+                    {s.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {form.ponto_fixo && (
@@ -231,11 +256,10 @@ export default function EditPrestador({ params }: { params: Promise<{ id: string
                       const current = form.regioes || [];
                       updateField("regioes", current.includes(r) ? current.filter((x) => x !== r) : [...current, r]);
                     }}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
-                      (form.regioes || []).includes(r)
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${(form.regioes || []).includes(r)
                         ? "bg-[#6E3DF7]/15 text-[#8E8EDC] border-[#6E3DF7]/30"
                         : "text-white/30 border-white/10 hover:border-white/20"
-                    }`}
+                      }`}
                   >
                     {r}
                   </button>
@@ -254,11 +278,10 @@ export default function EditPrestador({ params }: { params: Promise<{ id: string
                         const current = form.dias || [];
                         updateField("dias", current.includes(d.value) ? current.filter((x) => x !== d.value) : [...current, d.value]);
                       }}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
-                        (form.dias || []).includes(d.value)
+                      className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${(form.dias || []).includes(d.value)
                           ? "bg-[#6E3DF7]/15 text-[#8E8EDC] border-[#6E3DF7]/30"
                           : "text-white/30 border-white/10 hover:border-white/20"
-                      }`}
+                        }`}
                     >
                       {d.label}
                     </button>

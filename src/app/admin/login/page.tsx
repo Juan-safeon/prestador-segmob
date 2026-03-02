@@ -1,18 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Loader2, AlertCircle, Eye, EyeOff, Lock, Mail } from "lucide-react";
 import Image from "next/image";
 import { getSupabaseBrowser } from "@/lib/supabase";
 
-const DEV_EMAIL = "admin@segmob.com.br";
-const DEV_PASSWORD = "admin123";
+// Carrega as credenciais de desenvolvimento a partir das variáveis de ambiente
+const DEV_EMAIL = process.env.NEXT_PUBLIC_DEV_EMAIL;
+const DEV_PASSWORD = process.env.NEXT_PUBLIC_DEV_PASSWORD;
 
-const isDevMode = () => {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-  return !url || url.includes('SEU_PROJETO');
-};
+// O modo de desenvolvimento está ativo se ambas as variáveis estiverem definidas
+const isDevMode = !!(DEV_EMAIL && DEV_PASSWORD);
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
@@ -20,21 +20,22 @@ export default function AdminLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
-    if (isDevMode()) {
+    // Lógica para modo de desenvolvimento
+    if (isDevMode) {
       if (email.trim() === DEV_EMAIL && password === DEV_PASSWORD) {
         document.cookie = "dev-auth=true; path=/; max-age=86400";
-        window.location.href = "/admin";
+        router.replace("/admin"); // Use router.replace para melhor experiência
         return;
       }
-      setError(`Credenciais de dev: ${DEV_EMAIL} / ${DEV_PASSWORD}`);
-      setLoading(false);
-      return;
+      // Em modo dev, se as credenciais não baterem, o fluxo continua
+      // para a autenticação com Supabase, permitindo testar ambos os casos.
     }
 
     const supabase = getSupabaseBrowser();
@@ -49,7 +50,7 @@ export default function AdminLogin() {
       return;
     }
 
-    window.location.href = "/admin";
+    router.replace("/admin"); // Use router.replace para melhor experiência
   };
 
   return (
@@ -132,7 +133,7 @@ export default function AdminLogin() {
             </div>
 
             {/* Dev mode */}
-            {isDevMode() && (
+            {isDevMode && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -140,7 +141,7 @@ export default function AdminLogin() {
               >
                 <p className="text-xs text-[#F59E0B] font-medium mb-1">Modo Desenvolvimento</p>
                 <p className="text-[11px] text-white/40">
-                  <span className="text-white/50">{DEV_EMAIL}</span> / <span className="text-white/50">{DEV_PASSWORD}</span>
+                  As credenciais de desenvolvimento estão ativas.
                 </p>
               </motion.div>
             )}

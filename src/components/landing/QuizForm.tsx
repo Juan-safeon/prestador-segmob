@@ -3,19 +3,22 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Loader2, Send } from "lucide-react";
 import useQuizForm from "@/hooks/useQuizForm";
+import StepCompanyName from "./quiz/StepCompanyName";
 import StepName from "./quiz/StepName";
-import StepCity from "./quiz/StepCity";
-import StepState from "./quiz/StepState";
-import StepFixedLocation from "./quiz/StepFixedLocation";
-import StepRegions from "./quiz/StepRegions";
-import StepDays from "./quiz/StepDays";
-import StepHours from "./quiz/StepHours";
 import StepWhatsapp from "./quiz/StepWhatsapp";
 import StepEmail from "./quiz/StepEmail";
+import StepCity from "./quiz/StepCity";
+import StepState from "./quiz/StepState";
+import StepSpecialization from "./quiz/StepSpecialization";
+import StepSegments from "./quiz/StepSegments";
 import StepSuccess from "./quiz/StepSuccess";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 
-export default function QuizForm() {
+interface QuizFormProps {
+  hideHeader?: boolean;
+}
+
+export default function QuizForm({ hideHeader = false }: QuizFormProps) {
   const {
     step,
     data,
@@ -31,9 +34,9 @@ export default function QuizForm() {
   } = useQuizForm();
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && canAdvance && step < 10) {
+    if (e.key === "Enter" && canAdvance && step < 9) {
       e.preventDefault();
-      if (step === 9) {
+      if (step === 8) {
         submit();
       } else {
         nextStep();
@@ -44,31 +47,22 @@ export default function QuizForm() {
   const renderStep = () => {
     switch (step) {
       case 1:
-        return <StepName value={data.nome} onChange={(v) => updateField("nome", v)} />;
+        return <StepCompanyName value={data.empresa} onChange={(v) => updateField("empresa", v)} />;
       case 2:
-        return <StepCity value={data.cidade} onChange={(v) => updateField("cidade", v)} />;
+        return <StepName value={data.nome} onChange={(v) => updateField("nome", v)} />;
       case 3:
-        return <StepState value={data.uf} onChange={(v) => updateField("uf", v)} />;
-      case 4:
-        return (
-          <StepFixedLocation
-            value={data.pontoFixo}
-            endereco={data.endereco}
-            onChange={(v) => updateField("pontoFixo", v)}
-            onEnderecoChange={(v) => updateField("endereco", v)}
-          />
-        );
-      case 5:
-        return <StepRegions value={data.regioes} onChange={(v) => updateField("regioes", v)} />;
-      case 6:
-        return <StepDays value={data.dias} onChange={(v) => updateField("dias", v)} />;
-      case 7:
-        return <StepHours value={data.horario} onChange={(v) => updateField("horario", v)} />;
-      case 8:
         return <StepWhatsapp value={data.whatsapp} onChange={(v) => updateField("whatsapp", v)} />;
-      case 9:
+      case 4:
         return <StepEmail value={data.email} onChange={(v) => updateField("email", v)} />;
-      case 10:
+      case 5:
+        return <StepCity value={data.cidade} onChange={(v) => updateField("cidade", v)} />;
+      case 6:
+        return <StepState value={data.uf} onChange={(v) => updateField("uf", v)} />;
+      case 7:
+        return <StepSpecialization value={data.especializacao} onChange={(v) => updateField("especializacao", v)} />;
+      case 8:
+        return <StepSegments value={data.segmentos} onChange={(v) => updateField("segmentos", v)} />;
+      case 9:
         return <StepSuccess />;
       default:
         return null;
@@ -76,21 +70,25 @@ export default function QuizForm() {
   };
 
   return (
-    <section id="cadastro" className="relative py-24 sm:py-32">
+    <section id="cadastro" className={`relative ${hideHeader ? "py-4" : "py-24 sm:py-32"}`}>
       {/* Background accent */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#6E3DF7]/8 to-transparent pointer-events-none" />
+      {!hideHeader && (
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#6E3DF7]/8 to-transparent pointer-events-none" />
+      )}
 
       <div className="relative max-w-xl mx-auto px-4 sm:px-6">
-        <ScrollReveal>
-          <div className="text-center mb-10">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-3">
-              <span className="purple-gradient-text">Cadastre-se</span> agora
-            </h2>
-            <p className="text-white/50">
-              Preencha o formulário e faça parte da nossa rede nacional.
-            </p>
-          </div>
-        </ScrollReveal>
+        {!hideHeader && (
+          <ScrollReveal>
+            <div className="text-center mb-10">
+              <h2 className="text-3xl sm:text-4xl font-bold mb-3">
+                <span className="purple-gradient-text">Cadastre-se</span> agora
+              </h2>
+              <p className="text-white/50">
+                Preencha o formulário e faça parte da nossa rede nacional.
+              </p>
+            </div>
+          </ScrollReveal>
+        )}
 
         <ScrollReveal delay={0.15}>
           <div className="glass-card p-6 sm:p-8" onKeyDown={handleKeyDown}>
@@ -98,7 +96,7 @@ export default function QuizForm() {
             {!isComplete && (
               <div className="mb-8">
                 <div className="flex justify-between text-xs text-white/40 mb-2">
-                  <span>Etapa {step} de 9</span>
+                  <span>Etapa {step} de 8</span>
                   <span>{progress}%</span>
                 </div>
                 <div className="h-1.5 rounded-full bg-white/5 overflow-hidden">
@@ -152,7 +150,7 @@ export default function QuizForm() {
                   Voltar
                 </button>
 
-                {step === 9 ? (
+                {step === 8 ? (
                   <motion.button
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}

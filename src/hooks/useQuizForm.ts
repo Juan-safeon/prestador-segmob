@@ -4,19 +4,17 @@ import { useState, useCallback, useMemo } from "react";
 import { isValidEmail, isValidPhone, cleanPhone } from "@/lib/utils";
 import type { PrestadorFormData } from "@/types/prestador";
 
-const TOTAL_STEPS = 10; // 9 data steps + 1 success
+const TOTAL_STEPS = 9; // 8 data steps + 1 success
 
 const initialData: PrestadorFormData = {
+  empresa: "",
   nome: "",
-  cidade: "",
-  uf: "",
-  pontoFixo: null,
-  endereco: "",
-  regioes: [],
-  dias: [],
-  horario: "",
   whatsapp: "",
   email: "",
+  cidade: "",
+  uf: "",
+  especializacao: "",
+  segmentos: [],
 };
 
 export default function useQuizForm() {
@@ -40,30 +38,24 @@ export default function useQuizForm() {
 
   const canAdvance = useMemo(() => {
     switch (step) {
-      case 1: return data.nome.trim().length >= 3;
-      case 2: return data.cidade.trim().length >= 2;
-      case 3: return data.uf.length === 2;
-      case 4: return data.pontoFixo !== null;
-      case 5: return data.regioes.length > 0;
-      case 6: return data.dias.length > 0;
-      case 7: return data.horario !== "";
-      case 8: return isValidPhone(data.whatsapp);
-      case 9: return isValidEmail(data.email);
+      case 1: return data.empresa.trim().length >= 3;
+      case 2: return data.nome.trim().length >= 3;
+      case 3: return isValidPhone(data.whatsapp);
+      case 4: return isValidEmail(data.email);
+      case 5: return data.cidade.trim().length >= 2;
+      case 6: return data.uf.length === 2;
+      case 7: return data.especializacao !== "";
+      case 8: return data.segmentos.length > 0;
       default: return false;
     }
   }, [step, data]);
 
   const nextStep = useCallback(() => {
     if (!canAdvance) return;
-    // Skip address sub-question if no fixed location
-    if (step === 4 && data.pontoFixo === false) {
-      setStep(5);
-      return;
-    }
     if (step < TOTAL_STEPS) {
       setStep((s) => s + 1);
     }
-  }, [canAdvance, step, data.pontoFixo]);
+  }, [canAdvance, step]);
 
   const prevStep = useCallback(() => {
     if (step > 1) {
@@ -77,16 +69,14 @@ export default function useQuizForm() {
 
     try {
       const payload = {
+        empresa: data.empresa.trim(),
         nome: data.nome.trim(),
-        cidade: data.cidade.trim(),
-        uf: data.uf,
-        ponto_fixo: data.pontoFixo ?? false,
-        endereco: data.pontoFixo ? data.endereco.trim() : null,
-        regioes: data.regioes,
-        dias: data.dias,
-        horario: data.horario,
         whatsapp: cleanPhone(data.whatsapp),
         email: data.email.trim().toLowerCase(),
+        cidade: data.cidade.trim(),
+        uf: data.uf,
+        especializacao: data.especializacao,
+        segmentos: data.segmentos,
       };
 
       const res = await fetch("/api/prestadores", {

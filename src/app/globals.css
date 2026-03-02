@@ -98,6 +98,27 @@ body {
   box-shadow: 0 0 16px rgba(110, 61, 247, 0.2);
 }
 
+/* White button */
+.white-btn {
+  background: #FFFFFF;
+  border-radius: 20px;
+  color: #180049;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.white-btn:hover {
+  background: #F0F0F0;
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.white-btn:active {
+  transform: translateY(0);
+}
+
 /* Progress bar */
 .progress-bar {
   background: linear-gradient(90deg, #6E3DF7, #8E8EDC);

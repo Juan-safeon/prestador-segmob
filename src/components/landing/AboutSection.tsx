@@ -2,6 +2,7 @@
 
 import { Activity, Globe, Radio, Brain, Headphones } from "lucide-react";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import GradientButton from "@/components/ui/GradientButton";
 
 const stats = [
   {
@@ -77,6 +78,14 @@ export default function AboutSection() {
             </ScrollReveal>
           ))}
         </div>
+
+        <ScrollReveal delay={0.6}>
+          <div className="mt-16 text-center">
+            <GradientButton href="#cadastro">
+              Quero ser um prestador
+            </GradientButton>
+          </div>
+        </ScrollReveal>
       </div>
     </section>
   );
